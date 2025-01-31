@@ -1,33 +1,123 @@
 class aiomod
 {
 	debug = false;
+	
+	preSptLoad(container)
+	{
+		const cfgs = container.resolve("ConfigServer").configs;	
+		
+		const ragfair = cfgs['spt-ragfair']
+		ragfair.dynamic.purchasesAreFoundInRaid = true;
+		ragfair.dynamic.blacklist.enableBsgList = false;
+		ragfair.dynamic.blacklist.enableQuestList = false;
+		ragfair.dynamic.stackablePercent.min = 999;
+		ragfair.dynamic.stackablePercent.max = 999;
+		ragfair.dynamic.nonStackableCount.min = 999;
+		ragfair.dynamic.nonStackableCount.max = 999;
+		ragfair.dynamic.barter.itemCountMin = 999;
+		ragfair.dynamic.barter.itemCountMax = 999;
+		ragfair.dynamic.pack.itemCountMin = 999;
+		ragfair.dynamic.pack.itemCountMax = 999;
+		ragfair.dynamic.unreasonableModPrices = {};
+		ragfair.dynamic.itemPriceOverrideRouble = {};
+		ragfair.dynamic.itemPriceMultiplier = {};
+		if (this.debug)
+		{
+			console.log("edited -> configs/ragfair.json");
+		}
+		
+		const weather = cfgs['spt-weather']
+		weather.seasonDates.length = 0;
+		weather.seasonDates.push
+		(
+			{
+            "seasonType": 0,
+            "name": "SUMMER",
+            "startDay": "1",
+            "startMonth": "1",
+            "endDay": "31",
+            "endMonth": "12"
+			}		
+		);
+		if (this.debug)
+		{
+			console.log("edited -> configs/weather.json");
+		}
+		
+		const lostondeath = cfgs['spt-lostondeath']
+		lostondeath.equipment.ArmBand = false;
+		lostondeath.equipment.Compass = false;
+		lostondeath.equipment.Headwear = false;
+		lostondeath.equipment.Earpiece = false;
+		lostondeath.equipment.FaceCover = false;
+		lostondeath.equipment.ArmorVest = false;
+		lostondeath.equipment.Eyewear = false;
+		lostondeath.equipment.TacticalVest = false;
+		lostondeath.equipment.PocketItems = false;
+		lostondeath.equipment.Backpack = false;
+		lostondeath.equipment.Holster = false;
+		lostondeath.equipment.FirstPrimaryWeapon = false;
+		lostondeath.equipment.SecondPrimaryWeapon = false;
+		lostondeath.equipment.Scabbard = false;
+		lostondeath.equipment.SecuredContainer = false;
+		lostondeath.questItems = false;
+		lostondeath.specialSlotItems = false;
+		if (this.debug)
+		{
+			console.log("edited -> configs/lostondeath.json");
+		}
+		
+		const serverlocation = cfgs['spt-location']
+		serverlocation.customWaves.boss = {};
+		serverlocation.customWaves.normal = {};
+		if (this.debug)
+		{
+			console.log("edited -> configs/location.json");
+		}
+		
+		const pmc = cfgs['spt-pmc']
+		pmc.convertIntoPmcChance.default.assault.min = 0;
+		pmc.convertIntoPmcChance.default.assault.max = 0;
+		pmc.convertIntoPmcChance.default.cursedassault.min = 0;
+		pmc.convertIntoPmcChance.default.cursedassault.max = 0;
+		pmc.convertIntoPmcChance.default.pmcbot.min = 0;
+		pmc.convertIntoPmcChance.default.pmcbot.max = 0;
+		pmc.convertIntoPmcChance.default.exusec.min = 0;
+		pmc.convertIntoPmcChance.default.exusec.max = 0;
+		pmc.convertIntoPmcChance.default.arenafighter.min = 0;
+		pmc.convertIntoPmcChance.default.arenafighter.max = 0;
+		pmc.convertIntoPmcChance.default.arenafighterevent.min = 0;
+		pmc.convertIntoPmcChance.default.arenafighterevent.max = 0;
+		pmc.convertIntoPmcChance.default.crazyassaultevent.min = 0;
+		pmc.convertIntoPmcChance.default.crazyassaultevent.max = 0;
+		pmc.convertIntoPmcChance.factory4_day.assault.min = 0;
+		pmc.convertIntoPmcChance.factory4_day.assault.max = 0;
+		pmc.convertIntoPmcChance.laboratory.pmcbot.min = 0;
+		pmc.convertIntoPmcChance.laboratory.pmcbot.max = 0;
+		pmc.convertIntoPmcChance.rezervbase.pmcbot.min = 0;
+		pmc.convertIntoPmcChance.rezervbase.pmcbot.max = 0;
+		if (this.debug)
+		{
+			console.log("edited -> configs/pmc.json");
+		}
+	}
 
 	postDBLoad(container)
-	{
-		/*
-		
-		Server throws an error xD.
-		
-		TODO: container.resolve("ConfigServer").configs['spt-trader'].fence.blacklist.length = 0;	
-		TODO: Ragfair purchases=FIR
-		TODO: Clear "seasonDates" array and use single seasonType (SUMMER) for 1.1-31.12
-		TODO: lostondeath.json maybe?
-		
-		*/
-		
+	{	
 		const db = container.resolve("DatabaseServer").getTables();
 		const botTypes = db.bots.types;
 		const locations = db.locations;
-		const items = Object.values(db.templates.items);
-		
+		const items = Object.values(db.templates.items);		
 		this.editBots(botTypes);
 		this.editLocations(locations);
 		this.editBosses(locations)
 		
 		db.globals.config.AimPunchMagnitude = 0.1;
-		db.globals.config.RestrictionsInRaid.length = 0;
-		
-		// this.dumpDatabase(db);
+		db.globals.config.RestrictionsInRaid.length = 0;		
+		if (this.debug)
+		{
+			console.log("edited -> database/globals.json");
+		}
 		
 		for (const item of items)
 		{
@@ -69,21 +159,12 @@ class aiomod
 					duration: 0,
 					fadeOut: 0
 				};
-				
-				if (this.debug)
-				{
-					console.log(`${item._name.toUpperCase()} - ${item._props.MaxHpResource} - ${item._props.hpResourceRate} - ${item._props.medUseTime}`);
-				}
 			}
 			
 			if (item._name === "survival_first_aid_rollup_kit")
 			{
 				item._props.MaxHpResource = 50;
 				item._props.medUseTime = 1;
-				if (this.debug)
-				{
-					console.log(`${item._name.toUpperCase()} - ${item._props.MaxHpResource} - ${item._props.hpResourceRate} - ${item._props.medUseTime}`);
-				}
 			}
 			
 			if (item._name === "core_medical_surgical_kit")
@@ -104,11 +185,6 @@ class aiomod
 					duration: 0,
 					fadeOut: 0
 				};
-				
-				if (this.debug)
-				{
-					console.log(`${item._name.toUpperCase()} - ${item._props.MaxHpResource} - ${item._props.hpResourceRate} - ${item._props.medUseTime}`);
-				}
 			}
 			
 			if (item._props.Weight)
@@ -131,16 +207,23 @@ class aiomod
 				item._props.weaponErgonomicPenalty = 0;
 			}
 		}
+		if (this.debug)
+		{
+			console.log("edited -> database/templates/items.json");
+		}
 	}
 	
-	dumpDatabase(db) 
-	{
-		// Lister handles the 117mb file like butter B)
-		const fs = require('fs');
-		const path = require('path');
-		const logFilePath = path.join(__dirname, 'debug.json');
-		fs.appendFileSync(logFilePath, JSON.stringify(db, null, "\t"));
-	}
+	
+	//const cfg = container.resolve("ConfigServer").configs;
+	//const db = container.resolve("DatabaseServer").getTables();
+	//this.dumpDatabase(cfg);
+	//dumpDatabase(db) 
+	//{
+	//	const fs = require('fs');
+	//	const path = require('path');
+	//	const logFilePath = path.join(__dirname, 'debug.json');
+	//	fs.appendFileSync(logFilePath, JSON.stringify(db, null, "\t"));
+	//}
 	
 	editBots(botTypes) 
 	{
@@ -191,12 +274,10 @@ class aiomod
 					bot.generation.items.grenades.weights[key] = 0;
 				}
 			}
-			
-			if (this.debug)
-			{
-				console.log(`${botType.toUpperCase()} - ${bot.health.BodyParts[0].Head.min} - ${bot.health.BodyParts[0].Chest.min} - ${bot.health.BodyParts[0].Stomach.min} - ${bot.health.BodyParts[0].LeftArm.min} - ${bot.health.BodyParts[0].LeftLeg.min} - ${bot.health.BodyParts[0].RightArm.min} - ${bot.health.BodyParts[0].RightLeg.min}`);
-			}
-		
+		}
+		if (this.debug)
+		{
+			console.log("edited -> database/bots/types/");
 		}
 	}
 	
@@ -215,12 +296,12 @@ class aiomod
 				{
 					exit.Chance = 100;
 					exit.ExfiltrationTime = 5;
-					if (this.debug)
-					{
-						console.log(`${loc.toUpperCase()} - ${exit.Name.toUpperCase()} - ${exit.Chance}`);
-					}
 				});
 			}
+		}
+		if (this.debug)
+		{
+			console.log("edited -> configs/locations/");
 		}
 	}
 	
@@ -1482,6 +1563,10 @@ class aiomod
 					}
 				);
 			}
+		}
+		if (this.debug)
+		{
+			console.log("edited -> configs/locations/");
 		}
 	}
 }
