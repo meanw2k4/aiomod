@@ -1,146 +1,157 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", {value: true});
-exports.mod = void 0;
-
 class aiomod
 {
-	loggedQuests = new Set();
 	debug = false;
-	replacePmc = true;
-	logger;
-	container;
+	loggedQuests = new Set();
 	numberOfScavQuestsReplaced = 0;
 	numberOfPmcQuestsReplaced = 0;
 	totalNumberOfQuests = 0;
 	totalNumberOfQuestsReplaced = 0;
-	globalLocales;
 
 	postDBLoad(container)
 	{
-		// Quests (Scavs4All)
-		// BotGenerator (Grenades & Health)
-		// Items (Weights, Ergo, Mouse, Speed, AI-2, CMS/Surv12)
-		// Locations (Chance & EscapeTimeLimit)
+		/*
+		Quests (Scavs4All)
+		BotGenerator (Grenades & Health)
+		Items (Weights, Ergo, Mouse, Speed, AI-2, CMS/Surv12)
+		Locations (Chance & EscapeTimeLimit)
 		
-		const logger = container.resolve("WinstonLogger");
+		
+		Shit. Server throws an error xD.
+		container.resolve("ConfigServer").configs['spt-trader'].fence.blacklist.length = 0;		
+		TODO: ragfair blacklist & purchases=FIR
+		TODO: clear "seasonDates" array and use single seasonType (SUMMER) for 1.1-31.12
+		TODO: lostondeath.json maybe? might be convenient.
+		
+		TODO: "AimPunchMagnitude": 0 [db > globals > config]
+		TODO: "RestrictionsInRaid" array [db > globals]
+		*/
+		
+		
 		const db = container.resolve("DatabaseServer").getTables();
 		const quests = db.templates.quests;
 		const questsText = container.resolve("LocaleService").getLocaleDb();
 		const globalLocales = db.locales.global;
 		const botTypes = db.bots.types;
 		const locations = db.locations;
-
+		const items = Object.values(db.templates.items);
+		
 		this.changeTargets(quests);
 		this.changeBots(botTypes);
 		this.changeLocations(locations);
-
-		try
+		
+		//this.logToFile(db);
+		
+		for (const item of items)
 		{
-			const databaseServer = container.resolve("DatabaseServer");
-			const tables = databaseServer.getTables();
-			const items = Object.values(tables.templates.items);
-			for (const item of items)
+			if (item._name === "medkit")
 			{
-				if (item._name === "medkit")
+				item._props.MaxHpResource = 9999;
+				item._props.hpResourceRate = 9999;
+				item._props.medUseTime = 1;
+				if (!item._props.effects_damage)
 				{
-					item._props.MaxHpResource = 9999;
-					item._props.hpResourceRate = 9999;
-					item._props.medUseTime = 1;
-					if (!item._props.effects_damage)
-					{
-						item._props.effects_damage = {};
-					}
-					item._props.effects_damage["RadExposure"] = {
-						delay: 0,
-						duration: 0,
-						fadeOut: 0
-					};
-					item._props.effects_damage["LightBleeding"] = {
-						cost: 0,
-						delay: 0,
-						duration: 0,
-						fadeOut: 0
-					};
-					item._props.effects_damage["HeavyBleeding"] = {
-						cost: 0,
-						delay: 0,
-						duration: 0,
-						fadeOut: 0
-					};
-					item._props.effects_damage["Fracture"] = {
-						cost: 0,
-						delay: 0,
-						duration: 0,
-						fadeOut: 0
-					};
-					item._props.effects_damage["Contusion"] = {
-						cost: 0,
-						delay: 0,
-						duration: 0,
-						fadeOut: 0
-					};
-					if (this.debug)
-					{
-						console.log(`${item._name.toUpperCase()} - ${item._props.MaxHpResource} - ${item._props.hpResourceRate} - ${item._props.medUseTime}`);
-					}
+					item._props.effects_damage = {};
 				}
-				if (item._name === "survival_first_aid_rollup_kit")
-				{
-					item._props.MaxHpResource = 50;
-					item._props.medUseTime = 1;
-					if (this.debug)
-					{
-						console.log(`${item._name.toUpperCase()} - ${item._props.MaxHpResource} - ${item._props.hpResourceRate} - ${item._props.medUseTime}`);
-					}
-				}
-				if (item._name === "core_medical_surgical_kit")
-				{
-					item._props.MaxHpResource = 50;
-					item._props.medUseTime = 1;
-					if (!item._props.effects_damage)
-					{
-						item._props.effects_damage = {};
-					}
-					item._props.effects_damage["DestroyedPart"] = {
-						delay: 0,
-						duration: 0,
-						fadeOut: 0
-					};
-					item._props.effects_damage["Fracture"] = {
-						delay: 0,
-						duration: 0,
-						fadeOut: 0
-					};
-					if (this.debug)
-					{
-						console.log(`${item._name.toUpperCase()} - ${item._props.MaxHpResource} - ${item._props.hpResourceRate} - ${item._props.medUseTime}`);
-					}
-				}
-				if (item._props.Weight)
-				{
-					item._props.Weight *= 0.05;
-				}
-				if (item._props.mousePenalty)
-				{
-					item._props.mousePenalty = 0;
-				}
-				if (item._props.speedPenaltyPercent)
-				{
-					item._props.speedPenaltyPercent = 0;
-				}
-				if (item._props.weaponErgonomicPenalty)
-				{
-					item._props.weaponErgonomicPenalty = 0;
-				}
+				item._props.effects_damage["RadExposure"] = {
+					delay: 0,
+					duration: 0,
+					fadeOut: 0
+				};
+				item._props.effects_damage["LightBleeding"] = {
+					cost: 0,
+					delay: 0,
+					duration: 0,
+					fadeOut: 0
+				};
+				item._props.effects_damage["HeavyBleeding"] = {
+					cost: 0,
+					delay: 0,
+					duration: 0,
+					fadeOut: 0
+				};
+				item._props.effects_damage["Fracture"] = {
+					cost: 0,
+					delay: 0,
+					duration: 0,
+					fadeOut: 0
+				};
+				item._props.effects_damage["Contusion"] = {
+					cost: 0,
+					delay: 0,
+					duration: 0,
+					fadeOut: 0
+				};
 				
+				if (this.debug)
+				{
+					console.log(`${item._name.toUpperCase()} - ${item._props.MaxHpResource} - ${item._props.hpResourceRate} - ${item._props.medUseTime}`);
+				}
+			}
+			
+			if (item._name === "survival_first_aid_rollup_kit")
+			{
+				item._props.MaxHpResource = 50;
+				item._props.medUseTime = 1;
+				if (this.debug)
+				{
+					console.log(`${item._name.toUpperCase()} - ${item._props.MaxHpResource} - ${item._props.hpResourceRate} - ${item._props.medUseTime}`);
+				}
+			}
+			
+			if (item._name === "core_medical_surgical_kit")
+			{
+				item._props.MaxHpResource = 50;
+				item._props.medUseTime = 1;
+				if (!item._props.effects_damage)
+				{
+					item._props.effects_damage = {};
+				}
+				item._props.effects_damage["DestroyedPart"] = {
+					delay: 0,
+					duration: 0,
+					fadeOut: 0
+				};
+				item._props.effects_damage["Fracture"] = {
+					delay: 0,
+					duration: 0,
+					fadeOut: 0
+				};
+				
+				if (this.debug)
+				{
+					console.log(`${item._name.toUpperCase()} - ${item._props.MaxHpResource} - ${item._props.hpResourceRate} - ${item._props.medUseTime}`);
+				}
+			}
+			
+			if (item._props.Weight)
+			{
+				item._props.Weight *= 0.05;
+			}
+			
+			if (item._props.mousePenalty)
+			{
+				item._props.mousePenalty = 0;
+			}
+			
+			if (item._props.speedPenaltyPercent)
+			{
+				item._props.speedPenaltyPercent = 0;
+			}
+			
+			if (item._props.weaponErgonomicPenalty)
+			{
+				item._props.weaponErgonomicPenalty = 0;
 			}
 		}
-		catch (error)
-		{
-			logger.error(error.stack);
-		}
-		finally
-		{}
+	}
+	
+	logToFile(diibii) 
+	{
+		// Lister handles the 117mb file like butter B)
+		const fs = require('fs');
+		const path = require('path');
+		const logFilePath = path.join(__dirname, 'debug.json');
+		fs.appendFileSync(logFilePath, JSON.stringify(diibii, null, "\t"));
 	}
 
 	changeQuestText(questTextID)
