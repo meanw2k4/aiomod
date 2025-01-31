@@ -1,0 +1,13 @@
+{
+    "name": "aiomod",
+    "version": "1.0.0",
+    "sptVersion": "4.0.0",
+    "author": "meanw",
+    "contributors": [],
+    "license": "MIT",
+    "loadBefore": [],
+    "loadAfter": [],
+    "incompatibilities": [],
+    "isBundleMod": false,
+    "main": "src/mod.js"
+}
