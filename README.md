@@ -1,6 +1,8 @@
 # aiomod
-Test mod for 4.0.0-DEV / 34720
+small mod to make SPT even more fun B)  
 
-Scavs4All by LeftHandedCat / jonjetjon:  
-> [Scavs4All / github](https://github.com/jonjetjon/Scavs4All)  
-> [Scavs4All / spt-hub](https://hub.sp-tarkov.com/files/file/2389-scavs-4-all/)  
+Edits:  
+BotGenerator (Removed grenades & lowered bots' health)  
+Items weight nothing, Removed armor Ergo, Mouse- & MovementSpeed penalties, Super AI-2 & CMS/Surv12)  
+Locations (Removed PMC spawns, Exits.Chance, 8h raids, BossChance)  
+Globals: (AimPunchMagnitude & RestrictionsInRaid set to 0)  
