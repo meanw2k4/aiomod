@@ -16,6 +16,7 @@ class aiomod
 		ragfair.dynamic.nonStackableCount.max = 999;
 		ragfair.dynamic.barter.itemCountMin = 999;
 		ragfair.dynamic.barter.itemCountMax = 999;
+		ragfair.dynamic.pack.chancePercent = 0;
 		ragfair.dynamic.pack.itemCountMin = 999;
 		ragfair.dynamic.pack.itemCountMax = 999;
 		ragfair.dynamic.unreasonableModPrices = {};
@@ -117,7 +118,7 @@ class aiomod
 		{
 			"inventory": {
 				"equipment": {
-					"FirstPrimaryWeapon": {
+					"Holster" : {
 						"5d3eb3b0a4b93615055e84d2": 4430,
 						"5a7ae0c351dfba0017554310": 4430
 					}
