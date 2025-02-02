@@ -112,6 +112,64 @@ class aiomod
 		this.editLocations(locations);
 		this.editBosses(locations)
 		
+		const scav = botTypes['assault'];
+		const fun = 
+		{
+			"inventory": {
+				"equipment": {
+					"FirstPrimaryWeapon": {
+						"5d3eb3b0a4b93615055e84d2": 4430,
+						"5a7ae0c351dfba0017554310": 4430
+					}
+				},
+				"Ammo": {
+					"Caliber57x28": {
+						"5cc80f53e4a949000e1ea4f8": 10,
+						"5cc86832d7f00c000d3a6e6c": 10,
+						"5cc86840d7f00c002412c56c": 10,
+						"5cc80f67e4a949035e43bbba": 10,
+						"5cc80f38e4a949001152b560": 10,
+						"5cc80f8fe4a949033b0224a2": 10,
+						"5cc80f79e4a949033c7343b2": 10
+					}
+				},
+				"mods": {
+					"5a7ae0c351dfba0017554310": {
+						"mod_barrel": ["5a6b5f868dc32e000a311389"],
+						"mod_reciever": ["5a6f5e048dc32e00094b97da"],
+						"mod_magazine": ["5a718b548dc32e000d46d262"],
+						"patron_in_weapon": [
+							"58864a4f2459770fcc257101",
+							"64b7bbb74b75259c590fa897",
+							"5c3df7d588a4501f290594e5",
+							"56d59d3ad2720bdb418b4577",
+							"5efb0e16aeb21837e749c7ff",
+							"5a3c16fe86f77452b62de32a",
+							"5efb0da7a29a85116f6ea05f",
+							"5c0d56a986f774449d5de529"
+						]
+					},
+					"5d3eb3b0a4b93615055e84d2": {
+						"mod_barrel": ["5d3eb5b6a4b9361eab311902"],
+						"mod_reciever": ["5d3eb44aa4b93650d64e4979"],
+						"mod_magazine": ["5d3eb5eca4b9363b1f22f8e4"],
+						"patron_in_weapon": [
+							"5cc80f53e4a949000e1ea4f8",
+							"5cc86832d7f00c000d3a6e6c",
+							"5cc86840d7f00c002412c56c",
+							"5cc80f67e4a949035e43bbba",
+							"5cc80f38e4a949001152b560",
+							"5cc80f8fe4a949033b0224a2",
+							"5cc80f79e4a949033c7343b2"
+						]
+					}
+				}
+			}
+		};
+		this.MergeData(scav, fun);	
+		//Five-seveN & Glock 17 added for testing purposes
+		//console.log(JSON.stringify(scav.inventory.equipment.FirstPrimaryWeapon, null, 2)); 
+		
 		db.globals.config.AimPunchMagnitude = 0.1;
 		db.globals.config.RestrictionsInRaid.length = 0;		
 		if (this.debug)
@@ -211,6 +269,21 @@ class aiomod
 		{
 			console.log("edited -> database/templates/items.json");
 		}
+	}
+	
+	MergeData(bot, data)
+	{
+		for (const key in data) 
+		{
+			if (data[key] instanceof Object && key in bot) 
+			{
+				this.MergeData(bot[key], data[key]);
+			} else 
+			{
+				bot[key] = data[key];
+			}
+		}
+		return bot;
 	}
 	
 	
