@@ -9,7 +9,7 @@ const editLocations = require("./database/locations");
 const editQuests = require("./database/quests");
 const editItems = require("./database/items");
 const editGlobals = require("./database/globals");
-const weaponData = require("./database/weapondata");
+const wpndata = require('./database/weapondata.json');
 		
 class aiomod
 {
@@ -45,7 +45,7 @@ class aiomod
 		editQuests(quests);
 		editItems(items);
 		editGlobals(db);
-		this.MergeData(scav, weaponData);
+		this.MergeData(scav, wpndata);
 		
 		if (this.debug)
 		{
