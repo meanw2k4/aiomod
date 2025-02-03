@@ -1,5 +1,7 @@
 function editBots(botTypes) 
 {
+	const mods = ["mod_sight_front", "mod_sight_rear"];
+	
 	for (const botType in botTypes) 
 	{
 		const bot = botTypes[botType];
@@ -47,20 +49,18 @@ function editBots(botTypes)
 				bot.generation.items.grenades.weights[key] = 0;
 			}
 		}
-		if (bot?.chances?.weaponMods?.mod_sight_rear) 
+
+		if (bot?.chances?.weaponMods) 
 		{
-			for (const key in bot.chances.weaponMods.mod_sight_rear) 
+			for (const mod of mods) 
 			{
-				bot.chances.weaponMods.mod_sight_rear[key] = 100;
+				if (bot.chances.weaponMods[mod] != 100) 
+				{
+					bot.chances.weaponMods[mod] = 100;
+				}
 			}
 		}
-		if (bot?.chances?.weaponMods?.mod_sight_front) 
-		{
-			for (const key in bot.chances.weaponMods.mod_sight_front) 
-			{
-				bot.chances.weaponMods.mod_sight_front[key] = 100;
-			}
-		}
+		
 	}
 }
 
