@@ -12,9 +12,7 @@ const editGlobals = require("./database/globals");
 const wpndata = require('./database/weapondata.json');
 		
 class aiomod
-{
-	debug = false;
-	
+{	
 	preSptLoad(container)
 	{
 		const cfgs = container.resolve("ConfigServer").configs;
@@ -46,12 +44,6 @@ class aiomod
 		editItems(items);
 		editGlobals(db);
 		this.MergeData(scav, wpndata);
-		
-		if (this.debug)
-		{
-			console.log(JSON.stringify(scav.inventory.equipment.Holster, null, 2)); 
-		}
-		
 	}
 	
 	MergeData(bot, data)
