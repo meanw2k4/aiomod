@@ -552,18 +552,6 @@ class aiomod
 		return bot;
 	}
 	
-	
-	//const cfg = container.resolve("ConfigServer").configs;
-	//const db = container.resolve("DatabaseServer").getTables();
-	//this.dumpDatabase(cfg);
-	//dumpDatabase(db) 
-	//{
-	//	const fs = require('fs');
-	//	const path = require('path');
-	//	const logFilePath = path.join(__dirname, 'debug.json');
-	//	fs.appendFileSync(logFilePath, JSON.stringify(db, null, "\t"));
-	//}
-	
 	editQuests(quests)
 	{
 		for (const questId in quests)
@@ -577,11 +565,15 @@ class aiomod
 					if (condition.hasOwnProperty('availableAfter'))
 					{
 						condition.availableAfter = 0;
-						console.log(`${quest.QuestName} - ${condition.id} - ${condition.availableAfter}`);
 					}
 				}
 			}
 		}
+		if (this.debug)
+		{
+			console.log("edited -> database/quests.json");
+		}
+		
 	}
 	
 	editBots(botTypes) 
