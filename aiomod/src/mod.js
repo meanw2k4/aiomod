@@ -108,10 +108,12 @@ class aiomod
 		const db = container.resolve("DatabaseServer").getTables();
 		const botTypes = db.bots.types;
 		const locations = db.locations;
-		const items = Object.values(db.templates.items);		
+		const items = Object.values(db.templates.items);
+		const quests = Object.values(db.templates.quests);
 		this.editBots(botTypes);
 		this.editLocations(locations);
-		this.editBosses(locations)
+		this.editBosses(locations);
+		this.editQuests(quests);
 		
 		// --FirstPrimaryWeapon---------------------------------------------------------
 		// MP5, MP5SD, MP5K, UMP, MP9N, P90, AUGA1, SCARLH, DVL10, AA12GEN1, SAKOTRG	
@@ -429,8 +431,6 @@ class aiomod
 		};
 		this.MergeData(scav, fun);	
 		
-		
-		
 		if (this.debug)
 		{
 			console.log(JSON.stringify(scav.inventory.equipment.Holster, null, 2)); 
@@ -563,6 +563,26 @@ class aiomod
 	//	const logFilePath = path.join(__dirname, 'debug.json');
 	//	fs.appendFileSync(logFilePath, JSON.stringify(db, null, "\t"));
 	//}
+	
+	editQuests(quests)
+	{
+		for (const questId in quests)
+		{
+			const quest = quests[questId];
+			
+			if (quest.conditions && quest.conditions.AvailableForStart)
+			{
+				for (const condition of quest.conditions.AvailableForStart)
+				{
+					if (condition.hasOwnProperty('availableAfter'))
+					{
+						condition.availableAfter = 0;
+						console.log(`${quest.QuestName} - ${condition.id} - ${condition.availableAfter}`);
+					}
+				}
+			}
+		}
+	}
 	
 	editBots(botTypes) 
 	{
