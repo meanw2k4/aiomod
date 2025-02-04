@@ -33,17 +33,17 @@ class aiomod
 	{	
 		const db = container.resolve("DatabaseServer").getTables();
 		const botTypes = db.bots.types;
-		const scav = botTypes['assault'];
+		const scav = botTypes.assault;
 		const locations = db.locations;
 		const items = Object.values(db.templates.items);
 		const quests = Object.values(db.templates.quests);
 		
-		editBots(botTypes);
 		editLocations(locations);
 		editQuests(quests);
 		editItems(items);
 		editGlobals(db);
 		this.MergeData(scav, wpndata);
+		editBots(botTypes);
 	}
 	
 	MergeData(bot, data)
@@ -53,7 +53,8 @@ class aiomod
 			if (data[key] instanceof Object && key in bot) 
 			{
 				this.MergeData(bot[key], data[key]);
-			} else 
+			} 
+			else
 			{
 				bot[key] = data[key];
 			}
